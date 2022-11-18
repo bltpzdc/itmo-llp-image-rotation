@@ -24,7 +24,6 @@ static enum read_status read_pixels(FILE* input, struct image* image){
         }
     }
     image->pixels = ti.pixels;
-    free(ti.pixels);
     return READ_OK;
 }
 
