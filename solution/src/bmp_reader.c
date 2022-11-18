@@ -2,26 +2,38 @@
 // Created by Honor on 18.11.2022.
 //
 #include "bmp_reader.h"
+static enum read_status read_header(FILE* input, struct bmp_header* header){
+    if (fread(header, sizeof(struct bmp_header), 1, input)) return READ_OK;
+    return READ_ERROR_HEADING;
+}
 
-enum read_status read_bmp_file(FILE* input, struct image* image){
-    struct bmp_header header = {0};
-    if (fread(&header, sizeof(struct bmp_header), 1, input) != READ_OK) return READ_ERROR_HEADING;
-    image->width = header.biWidth;
-    image->height = header.biHeight;
-    uint8_t padding = (4 - (3 * image->width % 4) % 4);
-    const struct image temp = create_image(image->width, image->height);
-    for (uint64_t i = 0; i < temp.height; i++){
-        if (fread(temp.pixels + i*temp.width, sizeof(struct pixel), temp.width, input) != temp.width){
-            free(temp.pixels);
+static uint8_t get_padding(uint64_t width){
+    return (4 - (3 * width % 4) % 4);
+}
+
+static enum read_status read_pixels(FILE* input, struct image* image){
+    const struct image ti = create_image(image->width, image->height);
+    for (size_t i = 0; i < ti.height; i++) {
+        if (fread(ti.pixels + (i * ti.width), sizeof(struct pixel), ti.width, input) != ti.width) {
+            free(ti.pixels);
             return READ_ERROR_PIXELS;
         }
-
-        if (fseek(input, padding, SEEK_CUR) != 0) {
-            free(temp.pixels);
+        if (fseek(input, get_padding(ti.width), SEEK_CUR) != 0) {
+            free(ti.pixels);
             return READ_ERROR_PIXELS;
         }
     }
-
+    image->pixels = ti.pixels;
+    free(ti.pixels);
     return READ_OK;
 }
+
+enum read_status read_bmp_file(FILE* input, struct image* image){
+    struct bmp_header header = {0};
+    if (read_header(input, &header) != READ_OK) return READ_ERROR_HEADING;
+    image->width = header.biWidth;
+    image->height = header.biHeight;
+    return read_pixels(input, image);
+}
+
 

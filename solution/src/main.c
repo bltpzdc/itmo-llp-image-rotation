@@ -16,13 +16,13 @@ int main(int argc, char** argv){
     FILE* input = fopen(argv[1], "rb");
 
     if (!input){
-        fprintf(stderr, "cant open file");
+        fprintf(stderr, "Can not open input file.");
         return 1;
     }
 
     struct image old_image = {0};
 
-    if (read_bmp_file(input, &old_image)){
+    if (read_bmp_file(input, &old_image) != READ_OK){
         fprintf(stderr, "cant read file");
         free(old_image.pixels);
         fclose(input);
