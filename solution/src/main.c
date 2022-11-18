@@ -40,7 +40,7 @@ int main(int argc, char** argv){
 
     FILE* output = fopen(argv[2], "wb");
 
-    struct image new_image = rotate(old_image);
+    struct image new_image = rotate(&old_image);
 
     if (write_bmp_file(output, new_image) != WRITE_OK){
         fprintf(stderr, "cant write");

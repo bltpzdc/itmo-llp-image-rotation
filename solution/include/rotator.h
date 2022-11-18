@@ -6,5 +6,5 @@
 #define IMAGE_TRANSFORMER_ROTATOR_H
 #include "image.h"
 
-struct image rotate(struct image image);
+struct image rotate(struct image* image);
 #endif //IMAGE_TRANSFORMER_ROTATOR_H

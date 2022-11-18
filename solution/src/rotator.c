@@ -3,13 +3,19 @@
 //
 #include "rotator.h"
 
-struct image rotate(struct image old_image){
-    struct image new_image = create_image(old_image.height, old_image.width);
+struct image rotate(struct image* old_image){
+    uint64_t height = old_image->height;
+    uint64_t width = old_image->width;
 
-    for (uint64_t row = 0; row < old_image.height; row++){
-        for (uint64_t column = 0; column < old_image.width; column++){
-            set_pixel(new_image, new_image.width-row-1, column, get_pixel(old_image,column, row));
+    struct image copy = create_image(height,width);
+
+    if (copy.data != NULL) {
+        for (size_t i = 0; i < height; i++) {
+            for (size_t j = 0; j < width; j++) {
+                copy.data[height * j + height - i - 1] = old_image->data[width * i + j];
+            }
         }
+        return copy;
     }
-    return new_image;
+    else return (struct image){0};
 }
