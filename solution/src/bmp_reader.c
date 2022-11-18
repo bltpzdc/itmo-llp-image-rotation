@@ -5,18 +5,23 @@
 
 enum read_status read_bmp_file(FILE* input, struct image* image){
     struct bmp_header header = {0};
-    size_t head_read_flag = fread(&header, sizeof(struct bmp_header), 1, input);
-    if (head_read_flag != 1) return READ_ERROR_HEADING;
-    uint64_t width = header.biWidth;
-    uint64_t height = header.biHeight;
-    uint8_t padding = (width*height*sizeof(struct pixel))%4;
-    if (padding) padding = 4 - padding;
-    create_image(width, height);
-    for (uint64_t i = 0; i < height; i++){
-        if (!fread(image->pixels + i*width, width* sizeof(struct pixel), 1, input)) return READ_ERROR_PIXELS;
+    if (fread(&header, sizeof(struct bmp_header), 1, input) != READ_OK) return READ_ERROR_HEADING;
+    image->width = header.biWidth;
+    image->height = header.biHeight;
+    uint8_t padding = (4 - (3 * image->width % 4) % 4);
+    const struct image temp = create_image(image->width, image->height);
+    for (uint64_t i = 0; i < temp.height; i++){
+        if (fread(temp.pixels + i*temp.width, sizeof(struct pixel), temp.width, input) != temp.width){
+            free(temp.pixels);
+            return READ_ERROR_PIXELS;
+        }
 
-        if (fseek(input, padding, SEEK_CUR) == -1) return READ_ERROR_PIXELS;
+        if (fseek(input, padding, SEEK_CUR) != 0) {
+            free(temp.pixels);
+            return READ_ERROR_PIXELS;
+        }
     }
 
     return READ_OK;
 }
+

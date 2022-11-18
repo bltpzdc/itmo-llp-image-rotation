@@ -5,7 +5,6 @@
 #include "bmp_reader.h"
 #include "bmp_writer.h"
 #include "image.h"
-#include "operations.h"
 #include "rotator.h"
 
 int main(int argc, char** argv){
@@ -14,30 +13,53 @@ int main(int argc, char** argv){
         return 1;
     }
 
-    FILE* input = NULL;
-    FILE* output = NULL;
-    enum open_file_status openStatus = open_file(&input, argv[1], "rb");
-    if (openStatus != OPEN_OK) return 1;
-    openStatus = open_file(&output, argv[2], "wb");
-    if (openStatus != OPEN_OK) return 1;
+    FILE* input = fopen(argv[1], "rb");
+
+    if (!input){
+        fprintf(stderr, "cant open file");
+        return 1;
+    }
 
     struct image old_image = {0};
-    struct image new_image = {0};
 
-    enum read_status readStatus = read_bmp_file(input, &new_image);
-    if (readStatus != READ_OK) fprintf(stderr, "%s", "Error during reading file.");
-    new_image = rotate(old_image);
+    if (read_bmp_file(input, &old_image)){
+        fprintf(stderr, "cant read file");
+        free(old_image.pixels);
+        fclose(input);
+        return 1;
+    }
 
-    enum write_status writeStatus = write_bmp_file(output, new_image);
-    if (writeStatus != WRITE_OK) fprintf(stderr, "%s", "Error during writing into file.");
+    if (fclose(input) != 0){
+        printf("failed");
+        free(old_image.pixels);
+        return 1;
+    }
 
-    destroy_image(old_image);
-    destroy_image(new_image);
+    printf("closed file");
 
-    enum close_file_status closeFileStatus = close_file(input);
-    if (closeFileStatus != CLOSE_OK) fprintf(stderr, "%s", "Error during closing file.");
-    closeFileStatus = close_file(output);
-    if (closeFileStatus != CLOSE_OK) fprintf(stderr, "%s", "Error during closing file.");
+    FILE* output = fopen(argv[2], "wb");
+
+    struct image new_image = rotate(old_image);
+
+    if (write_bmp_file(output, new_image) != WRITE_OK){
+        fprintf(stderr, "cant write");
+        free(new_image.pixels);
+        fclose(input);
+        fclose(output);
+        return 1;
+    }
+
+    if (fclose(output) != 0 ){
+        fprintf(stderr, "cant close");
+        free(old_image.pixels);
+        free(new_image.pixels);
+        return 1;
+    }
+
+    free(old_image.pixels);
+    free(new_image.pixels);
+
+
 
     return 0;
 }
