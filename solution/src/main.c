@@ -25,14 +25,14 @@ int main(int argc, char** argv){
 
     if (read_bmp_file(input, &old_image) != READ_OK){
         fprintf(stderr, "cant read file");
-        free(old_image.pixels);
+        free(old_image.data);
         fclose(input);
         return 1;
     }
 
     if (fclose(input) != 0){
         printf("failed");
-        free(old_image.pixels);
+        free(old_image.data);
         return 1;
     }
 
@@ -44,7 +44,7 @@ int main(int argc, char** argv){
 
     if (write_bmp_file(output, new_image) != WRITE_OK){
         fprintf(stderr, "cant write");
-        free(new_image.pixels);
+        free(new_image.data);
         fclose(input);
         fclose(output);
         return 1;
@@ -52,13 +52,13 @@ int main(int argc, char** argv){
 
     if (fclose(output) != 0 ){
         fprintf(stderr, "cant close");
-        free(old_image.pixels);
-        free(new_image.pixels);
+        free(old_image.data);
+        free(new_image.data);
         return 1;
     }
 
-    free(old_image.pixels);
-    free(new_image.pixels);
+    free(old_image.data);
+    free(new_image.data);
 
 
 

@@ -37,7 +37,7 @@ enum write_status write_bmp_file(FILE* output, struct image image){
     enum write_status status = (fwrite(&header, sizeof (struct bmp_header), 1, output) == 1);
     if (status == WRITE_OK){
         for (uint64_t i = 0; i < image.height; i++){
-            if (fwrite(image.pixels + i*image.width, sizeof(struct pixel), image.width, output) != image.width){
+            if (fwrite(image.data + i*image.width, sizeof(struct pixel), image.width, output) != image.width){
                 return WRITE_ERROR_PIXELS;
             }
             if (fseek(output, padding, SEEK_CUR) != 0){
