@@ -20,6 +20,7 @@ int main(int argc, char** argv){
         return 1;
     }
 
+    fprintf(stdout, "Input file opened.");
     struct image old_image = {0};
 
     if (read_bmp_file(input, &old_image) != READ_OK){

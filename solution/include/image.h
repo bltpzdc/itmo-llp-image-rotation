@@ -9,18 +9,15 @@
 #include <stdint.h>
 
 
-struct __attribute__((packed)) pixel{
+struct __attribute__((packed)) pixel {
     uint8_t b, g, r;
 };
 
-struct image{
+struct image {
     uint64_t width, height;
-    struct pixel* pixels;
+    struct pixel *data;
 };
 
-struct image create_image(uint64_t width, uint64_t height);
-void destroy_image(struct image image);
-struct pixel get_pixel(struct image image, uint64_t row, uint64_t column);
-void set_pixel(struct image image, uint64_t row, uint64_t column, struct pixel pixel);
+struct image create_image(size_t width, size_t height);
 
 #endif //UNTITLED1_IMAGE_H
