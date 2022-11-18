@@ -1,9 +1,10 @@
 //
 // Created by Honor on 18.11.2022.
 //
-#include <stdio.h>
+
 #include "bmp.h"
 #include "image.h"
+#include <stdio.h>
 
 #ifndef IMAGE_TRANSFORMER_BMP_READER_H
 #define IMAGE_TRANSFORMER_BMP_READER_H

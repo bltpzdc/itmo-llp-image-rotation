@@ -5,8 +5,9 @@
 #ifndef UNTITLED1_IMAGE_H
 #define UNTITLED1_IMAGE_H
 
-#include <stdint.h>
 #include <malloc.h>
+#include <stdint.h>
+
 
 struct __attribute__((packed)) pixel{
     uint8_t b, g, r;

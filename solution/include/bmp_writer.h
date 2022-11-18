@@ -4,10 +4,9 @@
 
 #ifndef IMAGE_TRANSFORMER_BMP_WRITER_H
 #define IMAGE_TRANSFORMER_BMP_WRITER_H
-
-#include <stdio.h>
-#include "image.h"
 #include "bmp.h"
+#include "image.h"
+#include <stdio.h>
 
 enum write_status{
     WRITE_OK = 0,
