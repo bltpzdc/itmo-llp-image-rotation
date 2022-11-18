@@ -24,43 +24,42 @@ int main(int argc, char** argv){
     struct image old_image = {0};
 
     if (read_bmp_file(input, &old_image) != READ_OK){
-        fprintf(stderr, "cant read file");
+        fprintf(stderr, "Can not read input file.");
         free(old_image.data);
         fclose(input);
         return 1;
     }
+    fprintf(stdout, "Input file read.");
 
     if (fclose(input) != 0){
-        printf("failed");
+        printf("Can not close input file.");
         free(old_image.data);
         return 1;
     }
+    fprintf(stdout, "Input file closed.");
 
-    printf("closed file");
 
     FILE* output = fopen(argv[2], "wb");
+    if (!output){
+        fprintf(stderr, "Can not open input file.");
+        return 1;
+    }
 
     struct image new_image = rotate(&old_image);
+    free(old_image.data);
 
-    if (write_bmp_file(output, new_image) != WRITE_OK){
-        fprintf(stderr, "cant write");
+    if (write_bmp_file(output, &new_image) != WRITE_OK){
+        fprintf(stderr, "Can not write into output file.");
         free(new_image.data);
-        fclose(input);
         fclose(output);
         return 1;
     }
 
     if (fclose(output) != 0 ){
         fprintf(stderr, "cant close");
-        free(old_image.data);
         free(new_image.data);
         return 1;
     }
-
-    free(old_image.data);
     free(new_image.data);
-
-
-
     return 0;
 }
