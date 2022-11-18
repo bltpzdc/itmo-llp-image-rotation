@@ -8,26 +8,23 @@ static enum read_status read_header(FILE* input, struct bmp_header* header){
 
 static uint8_t get_padding(size_t width){
     uint8_t x = (4 - (width * 3) % 4 );
-    return (x == 4) ? ((uint8_t) 0) : (x % 4);
+    return (x == 4) ? ((uint8_t) 0) : x;
 }
 
 static enum read_status read_pixels(FILE* input, struct image* image){
-    const struct image temp = create_image(image->width, image->height);
-    if (temp.data != NULL) {
-        for (size_t i = 0; i < temp.height; i++) {
-            if (fread(temp.data + (i * temp.width), sizeof(struct pixel), temp.width, input) != temp.width) {
-                free(temp.data);
+    const struct image img = create_image(image->width, image->height);
+        for (size_t i = 0; i < img.height; i++) {
+            if (fread(img.data + (i * img.width), sizeof(struct pixel), img.width, input) != img.width) {
+                free(img.data);
                 return READ_ERROR_PIXELS;
             }
-            if (fseek(input, get_padding(temp.width), SEEK_CUR) != 0) {
-                free(temp.data);
+            if (fseek(input, get_padding(img.width), SEEK_CUR) != 0) {
+                free(img.data);
                 return READ_ERROR_PIXELS;
             }
         }
-        image->data = temp.data;
+        image->data = img.data;
         return READ_OK;
-    }
-    return READ_ERROR_PIXELS;
 }
 
 enum read_status read_bmp_file(FILE* input, struct image* image){

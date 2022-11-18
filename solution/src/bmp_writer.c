@@ -2,38 +2,36 @@
 // Created by Honor on 18.11.2022.
 //
 #include "bmp_writer.h"
-#define BMP_HEADER_TYPE 19778
-#define BMP_HEADER_PLANES 1
-#define BMP_HEADER_INFO_SIZE 40
-#define BMP_HEADER_RESERVED 0
-#define BMP_BIT_COUNT 24
-#define BMP_COMPRESSION 24
-#define BMP_PER_METER 0
-#define BMP_USED 0
-#define BMP_IMPORTANT 0
+#define HEADER_TYPE 19778
+#define PLANES 1
+#define SIZE 40
+#define ZERO 0
+#define BITS 24
+#define COMPRESSION 24
+
 
 static uint8_t get_padding(size_t width){
     uint8_t x = (4 - (width * 3) % 4 );
-    return (x == 4) ? ((uint8_t) 0) : (x % 4);
+    return (x == 4) ? ((uint8_t) 0) : x;
 }
 static struct bmp_header create_output_header(struct image* image){
     size_t image_size = (sizeof(struct pixel) * image->width + get_padding(image->width)) * image->height;
     return (struct bmp_header) {
-            .bfType = BMP_HEADER_TYPE,
+            .bfType = HEADER_TYPE,
             .bfileSize = sizeof(struct bmp_header) + image_size,
-            .bfReserved = BMP_HEADER_RESERVED,
+            .bfReserved = ZERO,
             .bOffBits = sizeof(struct bmp_header),
-            .biSize = BMP_HEADER_INFO_SIZE,
+            .biSize = SIZE,
             .biWidth = image->width,
             .biHeight = image->height,
-            .biPlanes = BMP_HEADER_PLANES,
-            .biBitCount = BMP_BIT_COUNT,
-            .biCompression = BMP_COMPRESSION,
+            .biPlanes = PLANES,
+            .biBitCount = BITS,
+            .biCompression = COMPRESSION,
             .biSizeImage = image_size,
-            .biXPelsPerMeter = BMP_PER_METER,
-            .biYPelsPerMeter = BMP_PER_METER,
-            .biClrUsed = BMP_USED,
-            .biClrImportant = BMP_IMPORTANT
+            .biXPelsPerMeter = ZERO,
+            .biYPelsPerMeter = ZERO,
+            .biClrUsed = ZERO,
+            .biClrImportant = ZERO
     };
 }
 
