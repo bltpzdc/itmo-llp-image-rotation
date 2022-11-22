@@ -14,5 +14,5 @@ enum write_status{
     WRITE_ERROR_PIXELS
 };
 
-enum write_status write_bmp_file(FILE* output, struct image* image);
+enum write_status write_bmp_file(FILE* const output, struct image* const image);
 #endif //IMAGE_TRANSFORMER_BMP_WRITER_H
