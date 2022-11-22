@@ -2,7 +2,7 @@
 // Created by Honor on 18.11.2022.
 //
 #include "bmp_reader.h"
-static enum read_status read_header(FILE* input, struct bmp_header* header){
+static enum read_status read_header(FILE* const input, struct bmp_header* const header){
     return (fread(header, sizeof(struct bmp_header), 1, input)) ? READ_OK : READ_ERROR_HEADING;
 }
 
@@ -11,7 +11,7 @@ static uint8_t get_padding(size_t width){
     return (x == 4) ? ((uint8_t) 0) : x;
 }
 
-static enum read_status read_pixels(FILE* input, struct image* image){
+static enum read_status read_pixels(FILE* const input, struct image* const image){
     const struct image img = create_image(image->width, image->height);
         for (size_t i = 0; i < img.height; i++) {
             if (fread(img.data + (i * img.width), sizeof(struct pixel), img.width, input) != img.width) {
@@ -28,7 +28,7 @@ static enum read_status read_pixels(FILE* input, struct image* image){
         return READ_OK;
 }
 
-enum read_status read_bmp_file(FILE* input, struct image* image){
+enum read_status read_bmp_file(FILE* const input, struct image* const image){
     struct bmp_header header = {0};
     if (read_header(input, &header) != READ_OK) return READ_ERROR_HEADING;
     image->width = header.biWidth;

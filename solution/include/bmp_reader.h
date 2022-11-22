@@ -14,5 +14,5 @@ enum read_status{
     READ_ERROR_PIXELS
 };
 
-enum read_status read_bmp_file(FILE* input, struct image* image);
+enum read_status read_bmp_file(FILE* const input, struct image* const image);
 #endif //IMAGE_TRANSFORMER_BMP_READER_H
