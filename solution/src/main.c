@@ -22,11 +22,6 @@ int main(int argc, char** argv){
         fprintf(stderr, "Can not open input file.");
         return 1;
     }
-    /*if (!input){
-        fprintf(stderr, "Can not open input file.");
-        return 1;
-    }
-    fprintf(stdout, "Input file opened.");*/
 
     struct image old_image = {0};
     if (read_bmp_file(input, &old_image) != READ_OK){
@@ -44,10 +39,12 @@ int main(int argc, char** argv){
     }
     fprintf(stdout, "Input file closed.");
 
-    FILE* output = fopen(argv[2], "wb");
-    if (!output){
-        fprintf(stderr, "Can not open input file.");
-        free(old_image.data);
+    FILE* output = NULL;
+
+    openFileStatus = open_file(&output, argv[2], "wb");
+    if (openFileStatus == OPEN_OK) fprintf(stdout, "Output file opened.");
+    else {
+        fprintf(stderr, "Can not open output file.");
         return 1;
     }
 
