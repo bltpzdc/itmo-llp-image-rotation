@@ -31,7 +31,8 @@ int main(int argc, char** argv){
     }
     fprintf(stdout, "Input file read.");
 
-    if (fclose(input) != 0){
+    enum close_file_status closeFileStatus = close_file(input);
+    if (closeFileStatus != CLOSE_OK){
         printf("Can not close input file.");
         free(old_image.data);
         return 1;
@@ -58,9 +59,13 @@ int main(int argc, char** argv){
     fprintf(stdout, "New image written to output file.");
     free(new_image.data);
 
-    if (fclose(output) != 0 ){
-        fprintf(stderr, "Can not close output file.");
+    closeFileStatus = close_file(output);
+    if (closeFileStatus != CLOSE_OK){
+        printf("Can not close output file.");
+        free(old_image.data);
         return 1;
     }
+    fprintf(stdout, "Output file closed.");
+
     return 0;
 }
