@@ -26,7 +26,6 @@ int main(int argc, char** argv){
     struct image old_image = {0};
     if (read_bmp_file(input, &old_image) != READ_OK){
         fprintf(stderr, "Can not read input file.");
-        free(old_image.data);
         fclose(input);
         return 1;
     }

@@ -20,6 +20,7 @@ static enum read_status read_pixels(FILE* input, struct image* image){
             }
             if (fseek(input, get_padding(img.width), SEEK_CUR) != 0) {
                 free(img.data);
+                image->data = NULL;
                 return READ_ERROR_PIXELS;
             }
         }
