@@ -5,6 +5,7 @@
 #include "bmp_reader.h"
 #include "bmp_writer.h"
 #include "image.h"
+#include "operations.h"
 #include "rotator.h"
 
 int main(int argc, char** argv){
@@ -13,13 +14,19 @@ int main(int argc, char** argv){
         return 1;
     }
 
-    FILE* input = fopen(argv[1], "rb");
+    FILE* input = NULL;
 
-    if (!input){
+    enum open_file_status openFileStatus = open_file(&input, argv[1], "rb");
+    if (openFileStatus == OPEN_OK) fprintf(stdout, "Input file opened.");
+    else {
         fprintf(stderr, "Can not open input file.");
         return 1;
     }
-    fprintf(stdout, "Input file opened.");
+    /*if (!input){
+        fprintf(stderr, "Can not open input file.");
+        return 1;
+    }
+    fprintf(stdout, "Input file opened.");*/
 
     struct image old_image = {0};
     if (read_bmp_file(input, &old_image) != READ_OK){
