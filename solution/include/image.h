@@ -1,5 +1,5 @@
 //
-// Created by Honor on 18.11.2022.
+// Created by Sevastian on 18.11.2022.
 //
 
 #ifndef UNTITLED1_IMAGE_H

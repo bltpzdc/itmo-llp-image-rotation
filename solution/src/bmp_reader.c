@@ -1,5 +1,5 @@
 //
-// Created by Honor on 18.11.2022.
+// Created by Sevastian on 18.11.2022.
 //
 #include "bmp_reader.h"
 static enum read_status read_header(FILE* const input, struct bmp_header* const header){

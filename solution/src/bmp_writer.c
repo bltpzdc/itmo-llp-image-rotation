@@ -1,5 +1,5 @@
 //
-// Created by Honor on 18.11.2022.
+// Created by Sevastian on 18.11.2022.
 //
 #include "bmp_writer.h"
 #define HEADER_TYPE 19778
